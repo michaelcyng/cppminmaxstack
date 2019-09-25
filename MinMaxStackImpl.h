@@ -5,8 +5,13 @@
 #ifndef __CPPMINMAXSTACK_MINMAXSTACKIMPL_H
 #define __CPPMINMAXSTACK_MINMAXSTACKIMPL_H
 
-template <typename T>
-MinMaxStack<T>::MinMaxStack() {}
+#include "MinMaxStack.h"
+
+template <typename  T>
+MinMaxStack<T>::MinMaxStack(const MinMaxStack<T>& mmStack) : myDataStack(mmStack.myDataStack),
+                                                             myMaxStack(mmStack.myMaxStack),
+                                                             myMinStack(mmStack.myMinStack) {
+}
 
 template <typename T>
 bool MinMaxStack<T>::empty() const {

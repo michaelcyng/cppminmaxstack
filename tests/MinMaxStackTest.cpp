@@ -15,6 +15,24 @@ protected:
 
 };
 
+TEST_F(MinMaxTests, TestCopyConstruct) {
+
+    MinMaxStack<int> stack1;
+    stack1.push(1);
+    stack1.push(2);
+    stack1.push(3);
+
+    MinMaxStack<int> stack2(stack1);
+    ASSERT_EQ(stack2.top(), 3);
+    stack2.pop();
+    ASSERT_EQ(stack2.top(), 2);
+    stack2.pop();
+    ASSERT_EQ(stack2.top(), 1);
+    stack2.pop();
+    ASSERT_TRUE(stack2.empty());
+
+}
+
 TEST_F(MinMaxTests, TestEmpty) {
 
     MinMaxStack<int> testStack;

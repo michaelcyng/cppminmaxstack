@@ -11,7 +11,8 @@ template <typename T>
 class MinMaxStack {
 public:
 
-    MinMaxStack();
+    MinMaxStack() = default;
+    MinMaxStack(const MinMaxStack<T>& mmStack);
 
     bool     empty() const;
     const T& max() const;
