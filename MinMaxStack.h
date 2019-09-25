@@ -13,6 +13,7 @@ public:
 
     MinMaxStack() = default;
     MinMaxStack(const MinMaxStack<T>& mmStack);
+    MinMaxStack(MinMaxStack<T>&& mmStack) noexcept;
 
     bool     empty() const;
     const T& max() const;
