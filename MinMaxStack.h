@@ -15,6 +15,8 @@ public:
     MinMaxStack(const MinMaxStack<T>& mmStack);
     MinMaxStack(MinMaxStack<T>&& mmStack) noexcept;
 
+    MinMaxStack<T>& operator=(const MinMaxStack<T>& mmStack);
+
     bool     empty() const;
     const T& max() const;
     const T& min() const;

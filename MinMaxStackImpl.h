@@ -19,6 +19,18 @@ MinMaxStack<T>::MinMaxStack(MinMaxStack<T>&& mmStack) noexcept : myDataStack(std
 }
 
 template <typename T>
+MinMaxStack<T>& MinMaxStack<T>::operator=(const MinMaxStack<T>& mmStack) {
+    if (&mmStack == this) {
+        return *this;
+    }
+
+    myDataStack = mmStack.myDataStack;
+    myMaxStack = mmStack.myMaxStack;
+    myMinStack = mmStack.myMinStack;
+    return *this;
+}
+
+template <typename T>
 bool MinMaxStack<T>::empty() const {
     return myDataStack.empty();
 }
