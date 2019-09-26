@@ -5,6 +5,7 @@
 #ifndef __CPPMINMAXSTACK_MINMAXSTACK_H
 #define __CPPMINMAXSTACK_MINMAXSTACK_H
 
+#include <memory>
 #include <stack>
 #include <thread>
 
@@ -28,9 +29,9 @@ public:
 
 private:
 
-    std::stack<T> myDataStack;
-    std::stack<T> myMaxStack;
-    std::stack<T> myMinStack;
+    std::stack<std::shared_ptr<T> > myDataStack;
+    std::stack<std::shared_ptr<T> > myMaxStack;
+    std::stack<std::shared_ptr<T> > myMinStack;
 
     std::mutex    myMutex;
 
