@@ -47,6 +47,8 @@ const T& MinMaxStack<T>::min() const {
 
 template <typename T>
 void MinMaxStack<T>::pop() {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
     if (empty()) {
         return;
     }
@@ -64,6 +66,8 @@ void MinMaxStack<T>::pop() {
 
 template <typename T>
 void MinMaxStack<T>::push(const T& data) {
+    std::lock_guard<std::mutex> lockGuard(myMutex);
+
     myDataStack.push(data);
 
     if (myMinStack.empty() || data <= myMinStack.top()) {

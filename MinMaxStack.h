@@ -6,6 +6,7 @@
 #define __CPPMINMAXSTACK_MINMAXSTACK_H
 
 #include <stack>
+#include <thread>
 
 template <typename T>
 class MinMaxStack {
@@ -29,6 +30,8 @@ private:
     std::stack<T> myDataStack;
     std::stack<T> myMaxStack;
     std::stack<T> myMinStack;
+
+    std::mutex    myMutex;
 
 };
 
