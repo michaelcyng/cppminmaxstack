@@ -80,6 +80,11 @@ void MinMaxStack<T>::push(const T& data) {
 }
 
 template <typename T>
+size_t MinMaxStack<T>::size() const {
+    return myDataStack.size();
+}
+
+template <typename T>
 const T& MinMaxStack<T>::top() const {
     return myDataStack.top();
 }

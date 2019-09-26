@@ -23,12 +23,16 @@ TEST_F(MinMaxTests, TestCopyConstruct) {
     stack1.push(3);
 
     MinMaxStack<int> stack2(stack1);
+    ASSERT_EQ(stack2.size(), 3);
     ASSERT_EQ(stack2.top(), 3);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 2);
     ASSERT_EQ(stack2.top(), 2);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 1);
     ASSERT_EQ(stack2.top(), 1);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 0);
     ASSERT_TRUE(stack2.empty());
 
 }
@@ -42,12 +46,17 @@ TEST_F(MinMaxTests, TestMoveConstruct) {
 
     MinMaxStack<int> stack2(std::move(stack1));
     ASSERT_TRUE(stack1.empty());
+    ASSERT_EQ(stack1.size(), 0);
+    ASSERT_EQ(stack2.size(), 3);
     ASSERT_EQ(stack2.top(), 3);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 2);
     ASSERT_EQ(stack2.top(), 2);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 1);
     ASSERT_EQ(stack2.top(), 1);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 0);
     ASSERT_TRUE(stack2.empty());
 
 }
@@ -60,12 +69,16 @@ TEST_F(MinMaxTests, TestAssignmentConstruct1) {
     stack1.push(3);
 
     stack2 = stack1;
+    ASSERT_EQ(stack2.size(), 3);
     ASSERT_EQ(stack2.top(), 3);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 2);
     ASSERT_EQ(stack2.top(), 2);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 1);
     ASSERT_EQ(stack2.top(), 1);
     stack2.pop();
+    ASSERT_EQ(stack2.size(), 0);
     ASSERT_TRUE(stack2.empty());
 
 }
@@ -78,12 +91,16 @@ TEST_F(MinMaxTests, TestAssignmentConstruct2) {
     stack1.push(3);
 
     stack1 = stack1;
+    ASSERT_EQ(stack1.size(), 3);
     ASSERT_EQ(stack1.top(), 3);
     stack1.pop();
+    ASSERT_EQ(stack1.size(), 2);
     ASSERT_EQ(stack1.top(), 2);
     stack1.pop();
+    ASSERT_EQ(stack1.size(), 1);
     ASSERT_EQ(stack1.top(), 1);
     stack1.pop();
+    ASSERT_EQ(stack1.size(), 0);
     ASSERT_TRUE(stack1.empty());
 
 }
@@ -91,10 +108,13 @@ TEST_F(MinMaxTests, TestAssignmentConstruct2) {
 TEST_F(MinMaxTests, TestEmpty) {
 
     MinMaxStack<int> testStack;
+    ASSERT_EQ(testStack.size(), 0);
     ASSERT_TRUE(testStack.empty());
     testStack.push(1);
+    ASSERT_EQ(testStack.size(), 1);
     ASSERT_FALSE(testStack.empty());
     testStack.pop();
+    ASSERT_EQ(testStack.size(), 0);
     ASSERT_TRUE(testStack.empty());
 
 }

@@ -23,6 +23,7 @@ public:
     const T& min() const;
     void     pop();
     void     push(const T &data);
+    size_t   size() const;
     const T& top() const;
 
 private:
