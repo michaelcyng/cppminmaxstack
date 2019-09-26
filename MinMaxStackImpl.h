@@ -37,12 +37,12 @@ bool MinMaxStack<T>::empty() const {
 
 template <typename T>
 const T& MinMaxStack<T>::max() const {
-    return myMaxStack.top();
+    return *myMaxStack.top();
 }
 
 template <typename T>
 const T& MinMaxStack<T>::min() const {
-    return myMinStack.top();
+    return *myMinStack.top();
 }
 
 template <typename T>
@@ -53,11 +53,11 @@ void MinMaxStack<T>::pop() {
         return;
     }
 
-    if (myMinStack.top() == myDataStack.top()) {
+    if (*myMinStack.top() == *myDataStack.top()) {
         myMinStack.pop();
     }
 
-    if (myMaxStack.top() == myDataStack.top()) {
+    if (*myMaxStack.top() == *myDataStack.top()) {
         myMaxStack.pop();
     }
 
@@ -67,15 +67,16 @@ void MinMaxStack<T>::pop() {
 template <typename T>
 void MinMaxStack<T>::push(const T& data) {
     std::lock_guard<std::mutex> lockGuard(myMutex);
+    auto pData = std::make_shared<T>(data);
 
-    myDataStack.push(data);
+    myDataStack.push(pData);
 
-    if (myMinStack.empty() || data <= myMinStack.top()) {
-        myMinStack.push(data);
+    if (myMinStack.empty() || data <= *myMinStack.top()) {
+        myMinStack.push(pData);
     }
 
-    if (myMaxStack.empty() || data >= myMaxStack.top()) {
-        myMaxStack.push(data);
+    if (myMaxStack.empty() || data >= *myMaxStack.top()) {
+        myMaxStack.push(pData);
     }
 }
 
@@ -86,7 +87,7 @@ size_t MinMaxStack<T>::size() const {
 
 template <typename T>
 const T& MinMaxStack<T>::top() const {
-    return myDataStack.top();
+    return *myDataStack.top();
 }
 
 #endif //__CPPMINMAXSTACK_MINMAXSTACKIMPL_H
