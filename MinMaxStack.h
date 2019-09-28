@@ -6,6 +6,7 @@
 #define __CPPMINMAXSTACK_MINMAXSTACK_H
 
 #include <memory>
+#include <shared_mutex>
 #include <stack>
 #include <thread>
 
@@ -29,11 +30,16 @@ public:
 
 private:
 
+    bool emptyImpl() const;  // No lock in this method
+
+    typedef std::shared_lock<std::shared_mutex> ReadLock_t;
+    typedef std::lock_guard<std::shared_mutex>  WriteLock_t;
+
     std::stack<std::shared_ptr<T> > myDataStack;
     std::stack<std::shared_ptr<T> > myMaxStack;
     std::stack<std::shared_ptr<T> > myMinStack;
 
-    std::mutex    myMutex;
+    mutable std::shared_mutex       myMutex;
 
 };
 
