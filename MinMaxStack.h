@@ -7,14 +7,13 @@
 
 #include <memory>
 #include <shared_mutex>
-#include <stack>
 #include <thread>
 
 template <typename T>
 class MinMaxStack {
 public:
 
-    MinMaxStack() = default;
+    MinMaxStack();
     MinMaxStack(const MinMaxStack<T>& mmStack);
     MinMaxStack(MinMaxStack<T>&& mmStack) noexcept;
 
@@ -35,11 +34,22 @@ private:
     typedef std::shared_lock<std::shared_mutex> ReadLock_t;
     typedef std::lock_guard<std::shared_mutex>  WriteLock_t;
 
-    std::stack<std::shared_ptr<T> > myDataStack;
-    std::stack<std::shared_ptr<T> > myMaxStack;
-    std::stack<std::shared_ptr<T> > myMinStack;
+    struct Node {
+        T                     data;
+        std::shared_ptr<Node> dataNext;
+        std::shared_ptr<Node> maxNext;
+        std::shared_ptr<Node> minNext;
 
-    mutable std::shared_mutex       myMutex;
+        explicit Node(const T& data): data(data), dataNext(nullptr), maxNext(nullptr), minNext(nullptr) {}
+    };
+
+    mutable std::shared_mutex  myMutex;
+
+    std::shared_ptr<Node>      myTop;
+    std::shared_ptr<Node>      myMaxTop;
+    std::shared_ptr<Node>      myMinTop;
+
+    size_t                     mySize;
 
 };
 
