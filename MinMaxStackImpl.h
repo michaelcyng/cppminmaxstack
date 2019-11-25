@@ -7,31 +7,14 @@
 
 #include <stack>
 
-template <typename T>
-MinMaxStack<T>::MinMaxStack(): myTop(nullptr), mySize(0) {
-}
+#include <internal/NonThreadSafeMinMaxStack.h>
 
 template <typename  T>
-MinMaxStack<T>::MinMaxStack(const MinMaxStack<T>& mmStack) {
-    auto mmTop = mmStack.myTop;
-    std::stack<T> tempStack;
-    while (mmTop != nullptr) {
-        tempStack.push(mmTop->data);
-        mmTop = mmTop->dataNext;
-    }
-
-    mySize = 0;
-    myTop = nullptr;
-    while(!tempStack.empty()) {
-        push(tempStack.top());
-        tempStack.pop();
-    }
+MinMaxStack<T>::MinMaxStack(const MinMaxStack<T>& mmStack) : myInternalMinMaxStack(mmStack.myInternalMinMaxStack) {
 }
 
 template <typename T>
-MinMaxStack<T>::MinMaxStack(MinMaxStack<T>&& mmStack) noexcept : myTop(mmStack.myTop), mySize(mmStack.mySize) {
-    mmStack.myTop = nullptr;
-    mmStack.mySize = 0;
+MinMaxStack<T>::MinMaxStack(MinMaxStack<T>&& mmStack) noexcept : myInternalMinMaxStack(std::move(mmStack.myInternalMinMaxStack)) {
 }
 
 template <typename T>
@@ -40,20 +23,7 @@ MinMaxStack<T>& MinMaxStack<T>::operator=(const MinMaxStack<T>& mmStack) {
         return *this;
     }
 
-    auto mmTop = mmStack.myTop;
-    std::stack<T> tempStack;
-    while (mmTop != nullptr) {
-        tempStack.push(mmTop->data);
-        mmTop = mmTop->dataNext;
-    }
-
-    mySize = 0;
-    myTop = nullptr;
-    while(!tempStack.empty()) {
-        push(tempStack.top());
-        tempStack.pop();
-    }
-
+    this->myInternalMinMaxStack = mmStack.myInternalMinMaxStack;
     return *this;
 }
 
@@ -61,83 +31,49 @@ template <typename T>
 bool MinMaxStack<T>::empty() const {
     ReadLock_t readLock(myMutex);
 
-    return emptyImpl();
+    return myInternalMinMaxStack.empty();
 }
 
 template <typename T>
 const T& MinMaxStack<T>::max() const {
     ReadLock_t readLock(myMutex);
 
-    return myMaxTop->data;
+    return myInternalMinMaxStack.max();
 }
 
 template <typename T>
 const T& MinMaxStack<T>::min() const {
     ReadLock_t readLock(myMutex);
 
-    return myMinTop->data;
+    return myInternalMinMaxStack.min();
 }
 
 template <typename T>
 void MinMaxStack<T>::pop() {
     WriteLock_t writeLock(myMutex);
 
-    if (emptyImpl()) {
-        return;
-    }
-
-    myMinTop = myTop->minNext;
-    myMaxTop = myTop->maxNext;
-    myTop = myTop->dataNext;
-    --mySize;
+    myInternalMinMaxStack.pop();
 }
 
 template <typename T>
 void MinMaxStack<T>::push(const T& data) {
     WriteLock_t writeLock(myMutex);
 
-    auto pData = std::make_shared<Node>(data);
-    pData->dataNext = myTop;
-    myTop = pData;
-
-    if (emptyImpl()) {
-        myMinTop = myTop;
-        myMaxTop = myTop;
-        ++mySize;
-        return;
-    }
-
-    ++mySize;
-    pData->maxNext = myMaxTop;
-    pData->minNext = myMinTop;
-
-    if (data >= myMaxTop->data) {
-        myMaxTop = pData;
-    }
-
-    if (data <= myMinTop->data) {
-        myMinTop = pData;
-    }
-
+    myInternalMinMaxStack.push(data);
 }
 
 template <typename T>
 size_t MinMaxStack<T>::size() const {
     ReadLock_t readLock(myMutex);
 
-    return mySize;
+    return myInternalMinMaxStack.size();
 }
 
 template <typename T>
 const T& MinMaxStack<T>::top() const {
     ReadLock_t readLock(myMutex);
 
-    return myTop->data;
-}
-
-template <typename T>
-bool MinMaxStack<T>::emptyImpl() const {
-    return (mySize == 0);
+    return myInternalMinMaxStack.top();
 }
 
 #endif //__CPPMINMAXSTACK_MINMAXSTACKIMPL_H
