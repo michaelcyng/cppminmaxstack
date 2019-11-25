@@ -10,10 +10,13 @@
 #include <thread>
 
 template <typename T>
+class NonThreadSafeMinMaxStack;
+
+template <typename T>
 class MinMaxStack {
 public:
 
-    MinMaxStack();
+    MinMaxStack() = default;
     MinMaxStack(const MinMaxStack<T>& mmStack);
     MinMaxStack(MinMaxStack<T>&& mmStack) noexcept;
 
@@ -29,28 +32,11 @@ public:
 
 private:
 
-    bool emptyImpl() const;  // No lock in this method
-
     typedef std::shared_lock<std::shared_mutex> ReadLock_t;
     typedef std::lock_guard<std::shared_mutex>  WriteLock_t;
 
-    struct Node {
-        T                     data;
-        std::shared_ptr<Node> dataNext;
-        std::shared_ptr<Node> maxNext;
-        std::shared_ptr<Node> minNext;
-
-        explicit Node(const T& data): data(data), dataNext(nullptr), maxNext(nullptr), minNext(nullptr) {}
-    };
-
-    mutable std::shared_mutex  myMutex;
-
-    std::shared_ptr<Node>      myTop;
-    std::shared_ptr<Node>      myMaxTop;
-    std::shared_ptr<Node>      myMinTop;
-
-    size_t                     mySize;
-
+    mutable std::shared_mutex   myMutex;
+    NonThreadSafeMinMaxStack<T> myInternalMinMaxStack;
 };
 
 #include "MinMaxStackImpl.h"
