@@ -28,12 +28,15 @@ public:
     void     pop();
     void     push(const T &data);
     size_t   size() const;
+    void     swap(MinMaxStack<T>& other);
     const T& top() const;
 
 private:
 
     typedef std::shared_lock<std::shared_mutex> ReadLock_t;
     typedef std::lock_guard<std::shared_mutex>  WriteLock_t;
+
+    static std::shared_mutex ourMutex;
 
     mutable std::shared_mutex   myMutex;
     NonThreadSafeMinMaxStack<T> myInternalMinMaxStack;

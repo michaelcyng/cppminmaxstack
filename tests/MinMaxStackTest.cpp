@@ -169,6 +169,37 @@ TEST_F(MinMaxTests, TestMax) {
 
 }
 
+TEST_F(MinMaxTests, TestSwap) {
+
+    MinMaxStack<int> testStack1;
+    testStack1.push(1);
+    testStack1.push(2);
+    testStack1.push(3);
+
+    MinMaxStack<int> testStack2;
+    testStack2.push(4);
+    testStack2.push(5);
+
+    testStack1.swap(testStack2);
+
+    ASSERT_EQ(testStack1.size(), 2);
+    ASSERT_EQ(testStack1.top(), 5);
+    testStack1.pop();
+    ASSERT_EQ(testStack1.top(), 4);
+    testStack1.pop();
+    ASSERT_TRUE(testStack1.empty());
+
+    ASSERT_EQ(testStack2.size(), 3);
+    ASSERT_EQ(testStack2.top(), 3);
+    testStack2.pop();
+    ASSERT_EQ(testStack2.top(), 2);
+    testStack2.pop();
+    ASSERT_EQ(testStack2.top(), 1);
+    testStack2.pop();
+    ASSERT_TRUE(testStack2.empty());
+
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

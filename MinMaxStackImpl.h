@@ -5,9 +5,13 @@
 #ifndef __CPPMINMAXSTACK_MINMAXSTACKIMPL_H
 #define __CPPMINMAXSTACK_MINMAXSTACKIMPL_H
 
+#include <algorithm>
 #include <stack>
 
 #include <internal/NonThreadSafeMinMaxStack.h>
+
+template <typename T>
+std::shared_mutex MinMaxStack<T>::ourMutex;
 
 template <typename  T>
 MinMaxStack<T>::MinMaxStack(const MinMaxStack<T>& mmStack) : myInternalMinMaxStack(mmStack.myInternalMinMaxStack) {
@@ -67,6 +71,13 @@ size_t MinMaxStack<T>::size() const {
     ReadLock_t readLock(myMutex);
 
     return myInternalMinMaxStack.size();
+}
+
+template <typename T>
+void MinMaxStack<T>::swap(MinMaxStack<T> &other) {
+    WriteLock_t writeLock(ourMutex);
+
+    std::swap(myInternalMinMaxStack, other.myInternalMinMaxStack);
 }
 
 template <typename T>
